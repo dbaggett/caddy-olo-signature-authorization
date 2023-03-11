@@ -1,0 +1,11 @@
+{
+	order olo_signature first
+}
+
+:8020 {
+	olo_signature {
+		client_id "test"
+		client_secret "test"
+	}
+	respond "<h1>OLO Signature Test!</h1>"
+}
