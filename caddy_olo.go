@@ -48,7 +48,11 @@ func (m OloSignature) Validate() error {
 }
 
 func (m OloSignature) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
-    m.oloCredentials.generateOloSignature(r)
+    err := m.oloCredentials.generateOloSignature(r)
+
+		if err != nil {
+			return err
+		}
 		
     return next.ServeHTTP(w, r)
 }
