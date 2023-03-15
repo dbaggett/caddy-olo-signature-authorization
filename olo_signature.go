@@ -65,5 +65,9 @@ func (olo OloCredentials) generateOloSignature(request *http.Request) error {
 		request.Header.Set("Authorization", fmt.Sprintf("OloSignature %s:%s", olo.ClientId, base64.StdEncoding.EncodeToString(encyptor.Sum(nil))))
 		request.Header.Set("Date", requestDate)
 
+		if request.Header.Get("X-Forwarded-For") == "" {
+			request.Header.Set("X-Forwarded-For", strings.Split(request.RemoteAddr, ":")[0])
+		}
+
 		return nil
 }
