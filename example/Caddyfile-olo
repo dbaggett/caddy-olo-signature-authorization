@@ -1,0 +1,31 @@
+{
+	order olo_signature first
+}
+
+127.0.0.1:8020 {
+  header {
+      Access-Control-Allow-Headers "Accept,Authorization,Content-Type,Origin,X-Requested-With,User-Agent,Date"
+      Access-Control-Allow-Methods "OPTIONS,GET,POST,PUT,PATCH,DELETE"
+      Access-Control-Allow-Origin *
+      defer
+  }
+
+  @options {
+      method OPTIONS
+  }
+
+  respond @options 204
+
+  route /health-check {
+    respond "A health check every 5 seconds keeps the autoscaler away!"
+  }
+  
+  olo_signature {
+    client_id {$CLIENT_ID}
+    client_secret {$CLIENT_SECRET}
+  }
+	
+  reverse_proxy {$UPSTREAM_API} {
+    header_up Host {upstream_hostport}
+  }
+}

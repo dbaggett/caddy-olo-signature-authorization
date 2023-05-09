@@ -15,8 +15,22 @@ func init() {
   	httpcaddyfile.RegisterHandlerDirective("olo_signature", parseCaddyfile)
 }
 
+// OLO client credentials required for Signature Authorization header generation.
+//
+// Authorization: OloSignature {ClientId}:{Signature}
+//
+// Signature is a Base64 encoded, signed hash of the following request components:
+// Client ID
+// HTTP Method
+// Content-Type
+// Base64 encoded, request body hash (SHA-256)
+// Request URI
+// Date in RFC1123 format
 type OloSignature struct {
+	  // OLO client ID used in header generation.
 		ClientId string `json:"client_id,omitempty"`
+
+		// OLO client secret for signing the request details.
 		ClientSecret string `json:"client_secret,omitempty"`
 
 		oloCredentials OloCredentials
