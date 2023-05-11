@@ -1,6 +1,7 @@
 package olosignature
 
 import (
+	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
@@ -36,13 +37,15 @@ func (olo OloCredentials) generateOloSignature(request *http.Request) error {
 		hasher := sha256.New()
 
 		if request.Body != nil {
-			bytes, bodyError := io.ReadAll(request.Body)
+			body, bodyError := io.ReadAll(request.Body)
 
 			if bodyError != nil {
 				return fmt.Errorf("error reading request body")
 			}
 
-			hasher.Write(bytes)
+			hasher.Write(body)
+
+			request.Body = io.NopCloser(bytes.NewBuffer(body))
 		} else {
 			hasher.Write([]byte(""))
 		}
